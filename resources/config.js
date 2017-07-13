@@ -7,7 +7,10 @@ var config = {
   dbName: 'test',
   dbURL: 'localhost',
   dbUserName: 'root',
-  dbUserPWD: ''
+  dbUserPWD: '',
+  dbPort: '3306',
+  dbCharSet: 'utf8',
+  dbCollation: 'utf8_swedish_ci'
 };
 //导出常量类
 module.exports = config;

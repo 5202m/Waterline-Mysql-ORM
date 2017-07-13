@@ -78,9 +78,12 @@ var connections = {
     //url: 'mysql://root:@localhost/test'
     host: config.dbURL,
     database: config.dbName,
-    port: '3306',
+    port: config.dbPort,
     user: config.dbUserName,
-    password: config.dbUserPWD
+    password: config.dbUserPWD,
+    // Optional
+    charset   : config.dbCharSet,
+    collation : config.dbCollation
   }
 };
 var wlconfig = {
