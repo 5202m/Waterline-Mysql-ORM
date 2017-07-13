@@ -2,7 +2,6 @@
  * Created by Administrator on 2017/7/11.
  */
 "use strict";
-//let logger = require("../../resources/logConf").getLogger("userAPI");
 let express = require('express');
 let router = express.Router();
 let userService = require('../../service/userService');
