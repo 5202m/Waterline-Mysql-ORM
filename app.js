@@ -75,7 +75,12 @@ var adapters = {
 var connections = {
   mysql: {
     adapter: 'mysql',
-    url: 'mysql://root:@localhost/test'
+    //url: 'mysql://root:@localhost/test'
+    host: config.dbURL,
+    database: config.dbName,
+    port: '3306',
+    user: config.dbUserName,
+    password: config.dbUserPWD
   }
 };
 var wlconfig = {
