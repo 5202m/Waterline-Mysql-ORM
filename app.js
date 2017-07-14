@@ -3,12 +3,16 @@
  */
 /*＃＃＃＃＃＃＃＃＃＃引入所需插件＃＃＃＃＃＃＃＃begin */
 var express = require('express');
+var redis   = require("redis");
 const compression = require('compression');
 var path = require('path');
+var session = require('express-session');
+var RedisStore = require('connect-redis')(session);
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var Waterline = require('waterline');
 var mysqlAdapter = require('sails-mysql');
+var client  = redis.createClient();
 //var logConf = require('./resources/logConf');
 var config = require('./resources/config');
 /*＃＃＃＃＃＃＃＃＃＃引入所需插件＃＃＃＃＃＃＃＃end */
@@ -27,40 +31,15 @@ app.use(bodyParser.urlencoded({ limit: "100mb", extended: true, parameterLimit: 
 app.use(cookieParser());
 //app.use(express.static(path.join(__dirname, 'public')));
 
-/*＃＃＃＃＃＃＃＃＃＃路由入口设置＃＃＃＃＃＃＃＃begin */
-var index = require('./routers/index').init(app); //配置同源页面路由
-
-// catch 404 and forward to error handler （400请求错误处理）
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
-
-// error handlers
-
-// development error handler
-// will print stacktrace （开发模式）
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
-  });
-}
-
-// production error handler
-// no stacktraces leaked to user（500请求错误处理）
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
-});
-/*＃＃＃＃＃＃＃＃＃＃定义app配置信息＃＃＃＃＃＃＃＃end */
+app.use(session({
+  resave: false,
+  saveUninitialized: true,
+  store: new RedisStore({host:config.redisUrlObj.host, port: config.redisUrlObj.port,client:client, ttl:  300}),
+  secret: 'myRedisSession',
+  //connection: config.redisUrlObj,//{host: '127.0.0.1', port: 6379},
+  maxAge: 3600,
+  sessionId: 'my.sid'
+}));
 
 /*＃＃＃＃＃＃＃＃＃＃数据库连接配置＃＃＃＃＃＃＃＃begin */
 var models = require('./models/models');

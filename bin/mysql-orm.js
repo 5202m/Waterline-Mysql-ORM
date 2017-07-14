@@ -14,6 +14,46 @@ app.orm.initialize(app.config, function(err, models) {
   console.log('waterline initialize success.');
   loadModels.init(models.collections);
 
+  /*＃＃＃＃＃＃＃＃＃＃路由入口设置＃＃＃＃＃＃＃＃begin */
+  var index = require('../routers/index').init(app); //配置同源页面路由
+
+  app.use(function (req, res, next) {
+    if (!req.session) {
+      return next(new Error('oh no')) // handle error
+    }
+    next(); // otherwise continue
+  });
+// catch 404 and forward to error handler （400请求错误处理）
+  app.use(function(req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+  });
+
+// error handlers
+// development error handler
+// will print stacktrace （开发模式）
+  if (app.get('env') === 'development') {
+    app.use(function(err, req, res, next) {
+      res.status(err.status || 500);
+      res.render('error', {
+        message: err.message,
+        error: err
+      });
+    });
+  }
+
+// production error handler
+// no stacktraces leaked to user（500请求错误处理）
+  app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+      message: err.message,
+      error: {}
+    });
+  });
+  /*＃＃＃＃＃＃＃＃＃＃定义app配置信息＃＃＃＃＃＃＃＃end */
+
   var port = "3000";
 //启动服务
   var mysqlORMServer = app.listen(port, function () {

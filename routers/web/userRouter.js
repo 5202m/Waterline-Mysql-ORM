@@ -36,6 +36,8 @@ router.get('/modify', (req, res) => {
 router.get('/getOne', (req, res) => {
   var param = {id:req.query['id']};
   userService.getUserOne(param, (data) => {
+    req.session.userInfo = data.data;
+    console.log(req.session.userInfo);
     res.json(data);
   });
 });
@@ -46,5 +48,12 @@ router.get('/delete', (req, res) => {
     res.json(data);
   });
 });
+
+router.get('/logout', (req, res) => {
+  req.session.userInfo = null;
+  res.json(req.session.userInfo);
+});
+
+
 
 module.exports = router;
