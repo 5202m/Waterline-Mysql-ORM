@@ -19,9 +19,9 @@ app.orm.initialize(app.config, function(err, models) {
 
   app.use(function (req, res, next) {
     if (!req.session) {
-      return next(new Error('oh no')) // handle error
+      return next(new Error('redis session is not work!'));
     }
-    next(); // otherwise continue
+    next();
   });
 // catch 404 and forward to error handler （400请求错误处理）
   app.use(function(req, res, next) {
